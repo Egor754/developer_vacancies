@@ -1,0 +1,32 @@
+{% extends 'my_company/mycompany_base.html' %}
+
+
+  {% block mycompany %}
+
+      <div class="col-12 col-lg-8">
+        <div class="card">
+          <div class="card-body px-4 pb-4">
+            <!-- Tab -->
+            <section class="tab-pane fade show active">
+              <h2 class="h4 pt-2 pb-3">Информация о&nbsp;компании</h2>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+              <form method="post" enctype="multipart/form-data">
+                  {% load crispy_forms_tags %}
+                  {% csrf_token %}
+                  {{ form|crispy }}
+                <div class="form-group">
+                  <input type="submit" class="btn btn-info" value="Сохранить">
+                </div>
+              </form>
+            </section>
+            <!-- END Tab -->
+          </div>
+        </div>
+      </div>
+      {% endblock %}

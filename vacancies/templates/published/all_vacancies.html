@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load ru_pluralize %}
+{% block title %}<title>Джуманджи | Вакансии</title>{% endblock %}
+{% block content %}
+
+  <main class="container mt-3">
+  <section>
+      <h1 class="h1 text-center mx-auto mt-4 py-5"><strong>Вакансии для <br>Junior-разработчиков</strong></h1>
+      <div class="row">
+        <div class="col-12 col-md-8 col-lg-6 offset-lg-3 offset-md-2">
+          <form method="get" action="{% url 'vacancies' %}" class="form-inline mb-3" enctype="multipart/form-data">
+            <div class="form-group col-8 col-md-10 pl-0">
+              <input name="search" class="form-control w-100" type="text" placeholder="Найти работу или стажировку"
+                     aria-label="Найти работу или стажировку">
+            </div>
+            <div class="form-group col-4 col-md-2 pl-0">
+              <button class="btn btn-primary w-100" type="submit">Найти</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  {% if vacancies %}
+    <section>
+      <p class="text-center pt-1">Найдено {{ vacancies|length }}
+          {{ vacancies|length|ru_pluralize:"вакансия,вакансии,вакансий" }}</p>
+      <div class="row mt-5">
+        <div class="col-12 col-lg-8 offset-lg-2 m-auto">
+            {% for vacancy in vacancies %}
+              <div class="card mb-4">
+            <div class="card-body px-4">
+              <div class="row">
+                <div class="col-12 col-md-8 col-lg-9">
+                    <h2 class="h2 pb-2"><a href="{% url 'vacancy' vacancy.pk %}">{{ vacancy.title }}</a></h2>
+                  <p class="mb-2">{{ vacancy.skills|f_replace }}</p>
+                  <p>От {{ vacancy.salary_min }} до {{ vacancy.salary_max }} руб.</p>
+                  <p class="text-muted pt-1">{{ vacancy.published_date }}</p>
+                </div>
+                <div class="col-12 col-md-4 col-lg-3 d-flex align-items-end">
+                  <a href="{% url 'company' vacancy.company.pk %}"><img src="{{ vacancy.company.logo.url }}"
+                                                                        width="130"
+                                                            height="80" alt=""></a>
+                </div>
+              </div>
+            </div>
+              </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% else %}
+      <p class="text-center pt-1">По вашему запросу ничего не найдено</p>
+  {% endif %}
+  </main>
+{% endblock %}

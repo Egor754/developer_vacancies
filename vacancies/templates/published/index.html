@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load ru_pluralize %}
+{% block content %}
+<body>
+  <main class="container mt-3">
+    <section>
+      <h1 class="h1 text-center mx-auto mt-4 py-5"><strong>Вакансии для <br>Junior-разработчиков</strong></h1>
+      <div class="row">
+        <div class="col-12 col-md-8 col-lg-6 offset-lg-3 offset-md-2">
+          <form method="get" action="{% url 'vacancies' %}" class="form-inline mb-3" enctype="multipart/form-data">
+            <div class="form-group col-8 col-md-10 pl-0">
+              <input name="search" class="form-control w-100" type="text" placeholder="Найти работу или стажировку" >
+            </div>
+            <div class="form-group col-4 col-md-2 pl-0">
+              <button class="btn btn-primary w-100" type="submit">Найти</button>
+            </div>
+          </form>
+          <p>Например: 
+            <a href="/vacancies/?search=Python" class="text-dark border-bottom border-dark m-1
+            text-decoration-none">Python</a>
+            <a href="/vacancies/?search=Flask" class="text-dark border-bottom border-dark m-1 text-decoration-none">Flask</a>
+            <a href="/vacancies/?search=Django" class="text-dark border-bottom border-dark m-1 text-decoration-none">Django</a>
+            <a href="/vacancies/?search=Парсинг" class="text-dark border-bottom border-dark m-1 text-decoration-none">Парсинг</a>
+            <a href="/vacancies/?search=ML" class="text-dark border-bottom border-dark m-1 text-decoration-none">ML</a>
+
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-5 pt-3">
+      <h2 class="h2 font-weight-normal text-center mb-5">Вакансии по рубрикам</h2>
+      <div class="row mb-0">
+            <!--CARD-->
+          {% for special in specialty %}
+        <div class="col-6 col-md-6 col-lg-3">
+          <div class="card pt-4 text-center mb-4">
+            <img class="mx-auto d-block" src="{{ special.picture.url }}" width="80" height="80" alt="">
+            <div class="card-body">
+              <p class="card-text mb-2">{{ special.title_special }}</p>
+              <p class="card-text"><a href="{% url 'special' special.code %}"
+              >{{ special.vacancy_count }}
+                  {{ special.vacancy_count|ru_pluralize }}</a></p>
+            </div>
+          </div>
+        </div>
+          {% endfor %}
+            <!--ENDCARD-->
+      </div>
+    </section>
+
+    <section class="my-5 pt-3">
+      <h2 class="h2 font-weight-normal text-center mb-5">Нам доверяют лучшие компании</h2>
+      <div class="row mb-0">
+<!--company-->
+          {% for company in companies %}
+        <div class="col-6 col-md-6 col-lg-3">
+          <div class="card pt-4 text-center mb-4">
+            <a href="#" style="max-width: 150px;" class="mx-auto d-block">
+              <img class="mx-auto d-block mw-100" src="{{ company.logo.url }}" alt="">
+            </a>
+            <div class="card-body">
+              <p class="card-text"><a href="{% url 'company' company.pk %}">{{ company.vacancy_count }}
+                  {{ company.vacancy_count|ru_pluralize }}</a></p>
+            </div>
+          </div>
+        </div>
+          {% endfor %}
+<!--endcompany-->
+      </div>
+    </section>
+  </main>
+{% endblock %}

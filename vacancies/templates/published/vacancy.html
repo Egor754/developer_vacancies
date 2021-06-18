@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load ru_pluralize %}
+{% block title %}<title>Джуманджи | {{ vacancy.title }}</title>{% endblock %}
+{% block content %}
+    <main class="container mt-3 pb-5">
+        <div class="row mt-5">
+            <div class="col-12 col-lg-2">
+                <div class="pl-3 mb-5">
+                    <p><a href="{% url 'special' vacancy.specialty.code %}">Назад</a></p>
+                </div>
+            </div>
+            <div class="col-12 col-lg-8">
+                <section class="pl-3">
+                    <a href="#"><img src="{{ vacancy.company.logo.url }}" width="130" height="80" alt=""></a>
+                    <div class="d-flex align-items-baseline align-content-baseline">
+                        <h1 class="h2 mt-4 font-weight-bold">{{ vacancy.title }}</h1>
+                        <p class="m-0 pl-3">{{ vacancy.salary_min }} – {{ vacancy.salary_max }} Руб</p>
+                    </div>
+                    <p class="mt-2">{{ vacancy.skills|f_replace }}</p>
+                    <p class="text-muted mb-4">{{ vacancy.company.name }}
+                        ( {{ vacancy.company.employee_count }}
+                        {{ vacancy.company.employee_count|ru_pluralize:"человек,человека,человек" }} ),
+                        {{ vacancy.company.location }}</p>
+                    <div style="line-height: 1.8;">
+                        {% autoescape off %}
+                            {{ vacancy.description }}
+                        {% endautoescape %}
+                    </div>
+                    {% if user.is_authenticated %}
+                        <form method="post" class="card mt-4 mb-3" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="card-body mx-3">
+                                <p class="h5 mt-3 font-weight-normal">Отозваться на вакансию</p>
+                                {{ form|crispy }}
+                                <input type="submit" class="btn btn-primary mt-4 mb-2" value="Откликнуться">
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-success" role="alert">
+                            Авторизуйтесь, чтобы откликнуться на вакансию
+                        </div>
+                        <br>
+                        <a class="btn btn-success" href="{% url 'login' %}" role="button">Войти</a>
+
+                    {% endif %}
+                </section>
+            </div>
+        </div>
+    </main>
+{% endblock %}
